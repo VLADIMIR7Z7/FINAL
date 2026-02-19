@@ -3,7 +3,7 @@ from rest_framework import viewsets, filters, permissions, mixins
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
 from django.contrib.auth import get_user_model
 
-from posts.models import Post, Group, Comment, Follow
+from posts.models import Post, Group
 from .serializers import (
     PostSerializer, GroupSerializer, CommentSerializer, FollowSerializer
 )
