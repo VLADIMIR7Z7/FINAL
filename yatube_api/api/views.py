@@ -4,7 +4,7 @@ from rest_framework.pagination import LimitOffsetPagination
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
 from django.contrib.auth import get_user_model
 
-from posts.models import Post, Group, Comment, Follow
+from posts.models import Post, Group  # Убрали Comment и Follow
 from .serializers import (
     PostSerializer, GroupSerializer, CommentSerializer, FollowSerializer
 )
@@ -17,7 +17,7 @@ class PostViewSet(viewsets.ModelViewSet):
     queryset = Post.objects.all()
     serializer_class = PostSerializer
     permission_classes = (IsAuthorOrReadOnly, IsAuthenticatedOrReadOnly)
-    pagination_class = LimitOffsetPagination  # Включаем пагинацию
+    pagination_class = LimitOffsetPagination
 
     def perform_create(self, serializer):
         serializer.save(author=self.request.user)
@@ -27,13 +27,13 @@ class GroupViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = Group.objects.all()
     serializer_class = GroupSerializer
     permission_classes = (IsAuthenticatedOrReadOnly,)
-    pagination_class = None  # Отключаем пагинацию для групп
+    pagination_class = None
 
 
 class CommentViewSet(viewsets.ModelViewSet):
     serializer_class = CommentSerializer
     permission_classes = (IsAuthorOrReadOnly, IsAuthenticatedOrReadOnly)
-    pagination_class = None  # Отключаем пагинацию для комментариев
+    pagination_class = None
 
     def get_queryset(self):
         post = get_object_or_404(Post, pk=self.kwargs.get('post_id'))
@@ -51,7 +51,7 @@ class FollowViewSet(mixins.CreateModelMixin,
     permission_classes = (permissions.IsAuthenticated,)
     filter_backends = (filters.SearchFilter,)
     search_fields = ('following__username',)
-    pagination_class = None  # Отключаем пагинацию для подписок
+    pagination_class = None
 
     def get_queryset(self):
         return self.request.user.follower.all()
